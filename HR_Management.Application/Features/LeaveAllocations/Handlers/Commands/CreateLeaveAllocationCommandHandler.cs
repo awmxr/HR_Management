@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HR_Management.Application.DTOs.LeaveAllocation.Validators;
+using HR_Management.Application.Exeptions;
 using HR_Management.Application.Features.LeaveAllocations.Requests.Commands;
 using HR_Management.Application.Persistence.Contract;
 using HR_Management.Domain;
@@ -32,7 +33,7 @@ public class CreateLeaveAllocationCommandHandler : IRequestHandler<CreateLeaveAl
 
         if(validationResult.IsValid == false)
         {
-            throw new Exception();
+            throw new ValidationExeption(validationResult);
         }
 
         var leaveAllocation = _mapper.Map<LeaveAllocation>(request.CreateLeaveAllocationDto);

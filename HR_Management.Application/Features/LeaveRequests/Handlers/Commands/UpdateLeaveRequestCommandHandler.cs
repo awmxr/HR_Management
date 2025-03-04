@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HR_Management.Application.DTOs.LeaveRequest.Validators;
+using HR_Management.Application.Exeptions;
 using HR_Management.Application.Features.LeaveRequests.Requests.Commands;
 using HR_Management.Application.Persistence.Contract;
 using MediatR;
@@ -30,7 +31,7 @@ public class UpdateLeaveRequestCommandHandler : IRequestHandler<UpdateLeaveReque
         var validationResult = await validator.ValidateAsync(request.UpdateLeaveRequestDto);
         if (validationResult.IsValid == false)
         {
-            throw new Exception();
+            throw new ValidationExeption(validationResult);
         }
 
 

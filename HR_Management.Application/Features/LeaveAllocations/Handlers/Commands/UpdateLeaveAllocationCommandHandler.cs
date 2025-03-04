@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using HR_Management.Application.DTOs.LeaveAllocation.Validators;
+using HR_Management.Application.Exeptions;
 using HR_Management.Application.Features.LeaveAllocations.Requests.Commands;
 using HR_Management.Application.Persistence.Contract;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HR_Management.Application.Features.LeaveAllocations.Handlers.Commands;
 
@@ -31,7 +27,7 @@ public class UpdateLeaveAllocationCommandHandler : IRequestHandler<UpdateLeaveAl
 
         if (validationResult.IsValid == false)
         {
-            throw new Exception();
+            throw new ValidationExeption(validationResult);
         }
 
 
