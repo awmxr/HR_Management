@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace HR_Management.Application.Features.LeaveRequests.Handlers.Commands;
 
-public class CreateLeaveRequestsCommandHandler : IRequestHandler<CreateLeaveRequestsCommand, int>
+public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveRequestCommand, int>
 {
     private readonly ILeaveRequestRepository _leaveRequestRepository;
     private readonly IMapper _mapper;
-    public CreateLeaveRequestsCommandHandler(ILeaveRequestRepository leaveRequestRepository , IMapper mapper)
+    public CreateLeaveRequestCommandHandler(ILeaveRequestRepository leaveRequestRepository , IMapper mapper)
     {
         _leaveRequestRepository = leaveRequestRepository;
         _mapper = mapper;
     }
-    public async Task<int> Handle(CreateLeaveRequestsCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateLeaveRequestCommand request, CancellationToken cancellationToken)
     {
         var leaveRequest = _mapper.Map<LeaveRequest>(request.CreateLeaveRequestDto);
         leaveRequest = await _leaveRequestRepository.Add(leaveRequest);
