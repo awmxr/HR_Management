@@ -27,9 +27,9 @@ public class UpdateLeaveTypeCommandHandler : IRequestHandler<UpdateLeaveTypeComm
 
         var validatorResult = await validator.ValidateAsync(request.LeaveTypeDto);
 
-        if (validationResult.IsValid == false)
+        if (validatorResult.IsValid == false)
         {
-            throw new ValidationExeption(validationResult);
+            throw new ValidationExeption(validatorResult);
         }
 
 

@@ -3,6 +3,7 @@ using HR_Management.Application.DTOs.LeaveRequest.Validators;
 using HR_Management.Application.Exeptions;
 using HR_Management.Application.Features.LeaveRequests.Requests.Commands;
 using HR_Management.Application.Persistence.Contract;
+using HR_Management.Application.Responses;
 using HR_Management.Domain;
 using MediatR;
 using System;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HR_Management.Application.Features.LeaveRequests.Handlers.Commands;
 
-public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveRequestCommand, int>
+public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveRequestCommand, BaseCommandResponse>
 {
     private readonly ILeaveRequestRepository _leaveRequestRepository;
     private readonly IMapper _mapper;
@@ -25,18 +26,29 @@ public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveReque
         _leaveTypeRepository = leaveTypeRepository;
 
     }
-    public async Task<int> Handle(CreateLeaveRequestCommand request, CancellationToken cancellationToken)
+    public async Task<BaseCommandResponse> Handle(CreateLeaveRequestCommand request, CancellationToken cancellationToken)
     {
+        var response = new BaseCommandResponse();
         var validator = new CreateLeaveRequestDtoValidator(_leaveTypeRepository);
 
         var validationResult = await validator.ValidateAsync(request.CreateLeaveRequestDto);
         if (validationResult.IsValid == false)
         {
-            throw new ValidationExeption(validationResult);
+            // throw new ValidationExeption(validationResult);
+
+            response.Success = false;
+            response.Message = "Create Faild.";
+            response.Errors = validationResult.Errors.Select(c=> c.ErrorMessage).ToList();
+            
         }
 
         var leaveRequest = _mapper.Map<LeaveRequest>(request.CreateLeaveRequestDto);
         leaveRequest = await _leaveRequestRepository.Add(leaveRequest);
-        return leaveRequest.Id;
+
+        response.Success = true;
+        response.Message = "Creattion successfull.";
+        response.Id = leaveRequest.Id;
+
+        return response;
     }
 }
