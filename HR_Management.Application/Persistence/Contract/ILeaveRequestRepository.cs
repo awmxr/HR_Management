@@ -11,5 +11,5 @@ public interface ILeaveRequestRepository : IGenericRepository<LeaveRequest>
 {
     Task<LeaveRequest> GetLeaveRequestWithDetails(int id);
     Task<List<LeaveRequest>> GetLeaveRequestsWithDetails();
-    Task ChangeApprovalStatus(LeaveRequest request, bool? approvalStatus);
+    Task ChangeApprovalStatus(LeaveRequest leaveRequest, bool? approvalStatus);
 }
