@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HR_Management.Application.DTOs.LeaveType.Validators;
 using HR_Management.Application.Features.LeaveTypes.Requests.Commands;
 using HR_Management.Application.Persistence.Contract;
 using HR_Management.Domain;
@@ -23,7 +24,16 @@ public class CreateLeaveTypeCommandHandler : IRequestHandler<CreateLeaveTypeComm
     }
     public async Task<int> Handle(CreateLeaveTypeCommand request, CancellationToken cancellationToken)
     {
-        var leaveType = _mapper.Map<LeaveType>(request.LeaveTypeDto);
+        var validator = new CreateLeaveTypeDtoValidator();
+
+        var validationResult = await validator.ValidateAsync(request.CreateLeaveTypeDto);
+
+        if(validationResult.IsValid == false)
+        {
+            throw new Exception();
+        }
+
+        var leaveType = _mapper.Map<LeaveType>(request.CreateLeaveTypeDto);
         leaveType = await _leaveTypeRepository.Add(leaveType);
         return leaveType.Id;
     }

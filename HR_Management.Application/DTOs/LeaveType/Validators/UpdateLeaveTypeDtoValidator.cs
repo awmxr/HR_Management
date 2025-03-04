@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace HR_Management.Application.DTOs.LeaveType.Validators;
 
-public class CreateLeaveTypeDtoValidator : AbstractValidator<CreateLeaveTypeDto>
+public class UpdateLeaveTypeDtoValidator : AbstractValidator<LeaveTypeDto>
 {
-    public CreateLeaveTypeDtoValidator()
+    public UpdateLeaveTypeDtoValidator()
     {
         Include(new ILeaveTypeDtoValidator());
+        RuleFor(c => c.Id)
+            .NotNull().WithMessage("{PropertyName} is required.");
+
     }
 }
