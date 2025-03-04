@@ -34,7 +34,7 @@ public class UpdateLeaveAllocationCommandHandler : IRequestHandler<UpdateLeaveAl
 
         var leaveAllocation = await _leaveAllocationRepository.Get(request.UpdateLeaveAllocationDto.Id);
         _mapper.Map(request.UpdateLeaveAllocationDto, leaveAllocation);
-        leaveAllocation = await _leaveAllocationRepository.Update(leaveAllocation);
+        await _leaveAllocationRepository.Update(leaveAllocation);
 
         return Unit.Value;
     }

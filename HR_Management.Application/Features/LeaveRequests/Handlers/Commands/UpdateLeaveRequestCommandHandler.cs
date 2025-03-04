@@ -39,7 +39,7 @@ public class UpdateLeaveRequestCommandHandler : IRequestHandler<UpdateLeaveReque
         if (request.UpdateLeaveRequestDto != null)
         {
             _mapper.Map(request.UpdateLeaveRequestDto, leaveRequest);
-            leaveRequest = await _leaveRequestRepository.Update(leaveRequest);
+            await _leaveRequestRepository.Update(leaveRequest);
         }
         else if (request.ChangeLeaveRequestApprovalDto != null)
         {

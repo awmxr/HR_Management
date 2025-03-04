@@ -35,7 +35,7 @@ public class UpdateLeaveTypeCommandHandler : IRequestHandler<UpdateLeaveTypeComm
 
         var leaveType = await _leaveTypeRepository.Get(request.LeaveTypeDto.Id);
         _mapper.Map(request.LeaveTypeDto,leaveType);
-        leaveType = await _leaveTypeRepository.Update(leaveType);
+        await _leaveTypeRepository.Update(leaveType);
 
         return Unit.Value;
     }
