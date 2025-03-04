@@ -17,6 +17,6 @@ public class LeaveRequest : BaseDomainEntity
     public DateTime DateRequest { get; set; }
     public string RequestComments { get; set; }
     public DateTime? DateActioned { get; set; }
-    public bool? Aproved { get; set; }
+    public bool? Approval { get; set; }
     public bool Cancelled { get; set; }
 }

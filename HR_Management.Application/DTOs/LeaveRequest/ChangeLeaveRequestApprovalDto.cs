@@ -1,17 +1,14 @@
-﻿using System;
+﻿using HR_Management.Application.DTOs.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HR_Management.Application.DTOs.LeaveType;
 
 namespace HR_Management.Application.DTOs.LeaveRequest
 {
-    public class LeaveRequestListDto
+    public class ChangeLeaveRequestApprovalDto : BaseDto
     {
-        public LeaveTypeDto LeaveType { get; set; }
-        public DateTime DateRequest { get; set; }
         public bool? Approval { get; set; }
-
     }
 }
