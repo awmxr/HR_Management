@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
-using HR_Management.Application.Persistence.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using HR_Management.Application.Contract.Persistence;
 
 namespace HR_Management.Application.DTOs.LeaveRequest.Validators;
 

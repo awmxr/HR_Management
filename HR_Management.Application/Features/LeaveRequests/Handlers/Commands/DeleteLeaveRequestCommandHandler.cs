@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using HR_Management.Application.Contract.Persistence;
 using HR_Management.Application.Exeptions;
 using HR_Management.Application.Features.LeaveRequests.Requests.Commands;
-using HR_Management.Application.Persistence.Contract;
 using HR_Management.Domain;
 using MediatR;
 

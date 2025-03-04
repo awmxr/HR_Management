@@ -1,13 +1,8 @@
-﻿using HR_Management.Application.Persistence.Contract;
+﻿using HR_Management.Application.Contract.Persistence;
 using HR_Management.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HR_Management.Persistence
 {
