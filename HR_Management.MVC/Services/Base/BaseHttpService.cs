@@ -14,7 +14,7 @@ namespace HR_Management.MVC.Services.Base
             _storage = localStorageService;
         }
 
-        protected Response<Guid> ConverApiExeptions(ApiException Exception)
+        protected Response<Guid> ConverApiExeptions<Guid>(ApiException Exception)
         {
             if(Exception.StatusCode == 400)
             {
