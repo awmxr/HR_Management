@@ -23,7 +23,7 @@ namespace HR_Management.Identity
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             services.AddDbContext<LeaveManagementIdentityDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("LeaveManagementConnectionString")
+                options.UseSqlServer(configuration.GetConnectionString("LeaveManagementIdentityConnectionString")
                     , b => b.MigrationsAssembly(typeof(LeaveManagementIdentityDbContext).Assembly.FullName));
             });
 
