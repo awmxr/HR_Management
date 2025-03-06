@@ -33,10 +33,11 @@ namespace HR_Management.MVC.Services.Base
 
         protected void AddBearerToken()
         {
-            if (_storage.Exist("key"))
+            if (_storage.Exist("token"))
             {
+                var x = _storage.GetStorageValue<string>("token");
                 _client.HttpClient.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", _storage.GetStorageValue<string>("token"));
+                    new AuthenticationHeaderValue("Bearer", x);
             }
         }
     }

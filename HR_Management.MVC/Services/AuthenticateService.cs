@@ -1,5 +1,6 @@
 ﻿using Hanssens.Net;
 using HR_Management.MVC.Contracts;
+using HR_Management.MVC.Models;
 using HR_Management.MVC.Services.Base;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -21,14 +22,14 @@ namespace HR_Management.MVC.Services
             _localStorage = localStorageService;
         }
 
-        public async Task<bool> Authenticate(string email, string password)
+        public async Task<bool> Authenticate(LoginVM loginVM)
         {
             try
             {
                 AuthRequest authRequest = new AuthRequest()
                 {
-                    Email = email,
-                    Password = password
+                    Email = loginVM.Email,
+                    Password = loginVM.Password
                 };
                 var authenticateResponse = await _client.LoginAsync(authRequest);
                 if (authenticateResponse.Token != string.Empty)
@@ -57,14 +58,15 @@ namespace HR_Management.MVC.Services
             await _httpContextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
-        public async Task<bool> Register(string firstName, string lastName, string email, string password)
+        public async Task<bool> Register(RegisterVM registerVM)
         {
             RegistrationRequest registrationRequest = new RegistrationRequest()
             {
-                Email = email,
-                Password = password,
-                FirstName = firstName,
-                LastName = lastName,
+                Email = registerVM.Email,
+                Password = registerVM.Password,
+                FirstName = registerVM.FirstName,
+                LastName = registerVM.LastName,
+                UserName = registerVM.UserName
 
             };
             var response = await _client.RegisterAsync(registrationRequest);
