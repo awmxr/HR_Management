@@ -46,8 +46,9 @@ namespace HR_Management.MVC.Services
             }
             catch
             {
-                return false;
+                
             }
+            return false;
         }
 
         public async Task Logout()
