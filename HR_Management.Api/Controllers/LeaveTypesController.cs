@@ -3,6 +3,7 @@ using HR_Management.Application.Features.LeaveTypes.Requests.Commands;
 using HR_Management.Application.Features.LeaveTypes.Requests.Queries;
 using HR_Management.Application.Responses;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -11,6 +12,7 @@ namespace HR_Management.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LeaveTypesController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,6 +23,7 @@ namespace HR_Management.Api.Controllers
         }
         // GET: api/<LeaveTypesController>
         [HttpGet]
+        
         public async Task<ActionResult<List<LeaveTypeDto>>> Get()
         {
             var leaveTypes = await _mediator.Send(new GetLeaveTypeListRequest());
