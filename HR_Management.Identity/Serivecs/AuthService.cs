@@ -75,7 +75,36 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> Login(AuthRequest request)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByEmailAsync(request.Email);
+        if (user == null)
+        {
+            throw new Exception($"user with {request.Email} not exist!");
+        }
+
+        var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+
+        if (!result.Succeeded)
+        {
+            throw new Exception($"password for {request.Email} is not valid");
+        }
+
+
+        JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+
+
+        var response = new AuthResponse()
+        {
+            Email = user.Email,
+            Id = user.Id,
+            Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            Username = user.UserName
+        };
+
+
+
+
+        return response;
+
 
     }
 
