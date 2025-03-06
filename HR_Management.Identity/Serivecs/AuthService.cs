@@ -1,14 +1,13 @@
-﻿using HR_Management.Application.Contract.Identity;
+﻿using HR_Management.Application.Constants;
+using HR_Management.Application.Contract.Identity;
 using HR_Management.Application.Models.Identity;
 using HR_Management.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HR_Management.Identity.Serivecs;
 
@@ -16,25 +15,24 @@ public class AuthService : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IOptions<JwtSettings> _jwtSettings;
+    private readonly JwtSettings _jwtSettings;
     public AuthService(UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IOptions<JwtSettings> jwtSettings
         )
     {
-        _jwtSettings = jwtSettings;
+        _jwtSettings = jwtSettings.Value;
         _userManager = userManager;
         _signInManager = signInManager;
     }
-    public Task<AuthResponse> Login(AuthRequest request)
-    {
-        throw new NotImplementedException();
-    }
+
+
+    #region Register
 
     public async Task<RegistrationResponse> Register(RegistrationRequest request)
     {
-        var existingUser = await _userManager.FindByNameAsync(request.UserName );
-        if(existingUser != null)
+        var existingUser = await _userManager.FindByNameAsync(request.UserName);
+        if (existingUser != null)
         {
             throw new Exception($"user name '{request.UserName}' already exist!");
         }
@@ -50,9 +48,9 @@ public class AuthService : IAuthService
 
 
         var existingEmail = await _userManager.FindByEmailAsync(request.Email);
-        if(existingEmail == null)
+        if (existingEmail == null)
         {
-            var result = await _userManager.CreateAsync(user,request.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "Employee");
@@ -66,11 +64,57 @@ public class AuthService : IAuthService
             {
                 throw new Exception($"{result.Errors}");
             }
-            
+
         }
         else
         {
             throw new Exception($"Email '{request.Email}' already exist!");
         }
+    }
+    #endregion
+
+    public async Task<AuthResponse> Login(AuthRequest request)
+    {
+        throw new NotImplementedException();
+
+    }
+
+
+    private async Task<JwtSecurityToken> GenerateToken(ApplicationUser user)
+    {
+
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var roleClaims = new List<Claim>();
+
+        foreach (var role in roles)
+        {
+            roleClaims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Sub,user.UserName),
+            new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
+            new Claim(JwtRegisteredClaimNames.Email,user.Email),
+            new Claim(CustomClaimTypes.Uid,user.Id)
+
+        }.Union(userClaims)
+        .Union(roleClaims);
+
+        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
+        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+        var jwtSecurityToken = new JwtSecurityToken
+        (
+             issuer: _jwtSettings.Issuer,
+             audience: _jwtSettings.Audience,
+             claims: claims,
+             signingCredentials: signingCredentials,
+             expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes)
+        );
+
+        return jwtSecurityToken;
     }
 }
