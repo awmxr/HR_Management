@@ -1,4 +1,6 @@
 ﻿using HR_Management.MVC.Contracts;
+using HR_Management.MVC.Models;
+using HR_Management.MVC.Services.Base;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,12 +21,6 @@ namespace HR_Management.MVC.Controllers
             return View(leaveTypes);
         }
 
-        // GET: LeaveTypesController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: LeaveTypesController/Create
         public ActionResult Create()
         {
@@ -34,22 +30,33 @@ namespace HR_Management.MVC.Controllers
         // POST: LeaveTypesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(CreateLeaveTypeVM leaveTypeVM)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var response = await _leaveTypeService.CreateLeaveType(leaveTypeVM);
+                if (response.Success)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                ModelState.AddModelError("", response.ValidationErrors);
+                
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", ex.Message);
+                
             }
+            return View(leaveTypeVM);
         }
 
+
         // GET: LeaveTypesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var leaveType = await _leaveTypeService.GetLeaveTypeDetails(id);
+
+            return View(leaveType);
         }
 
         // POST: LeaveTypesController/Edit/5
@@ -66,6 +73,15 @@ namespace HR_Management.MVC.Controllers
                 return View();
             }
         }
+
+        // GET: LeaveTypesController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        
+
 
         // GET: LeaveTypesController/Delete/5
         public ActionResult Delete(int id)
